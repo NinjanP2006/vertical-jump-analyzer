@@ -23,8 +23,8 @@ export interface FramePose {
   mediaTime: number;
   /** 33 normalized image-space landmarks (y increases downward). For overlay + trajectories. */
   landmarks: Landmark[];
-  /** 33 world landmarks in meters, hip-relative. For joint angles (Milestone 5). */
-  worldLandmarks: Landmark[];
+  /** 33 world landmarks in meters, hip-relative. Unused in the height-only MVP (form metrics only). */
+  worldLandmarks?: Landmark[];
 }
 
 export type PoseSequence = FramePose[];
