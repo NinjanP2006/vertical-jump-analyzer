@@ -178,6 +178,56 @@
   color: #fbbf24;
 }
 
+.scrubber__phases {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.scrubber__phasehead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.scrubber__flight {
+  display: flex;
+  flex-direction: column;
+}
+.scrubber__flightlabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+}
+.scrubber__flightval {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  color: #e5e7eb;
+}
+.scrubber__phasebtns {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.scrubber__phasebtns button {
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+  background: #1f2937;
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.scrubber__crosscheck {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+.scrubber__crosscheck .warn {
+  color: #fbbf24;
+}
+
 .scrubber__note {
   margin: 0;
   padding: 0.75rem 1rem;

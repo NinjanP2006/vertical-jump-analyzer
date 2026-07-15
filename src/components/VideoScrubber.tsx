@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { scanFrames, frameSeekTime, seekTo, isRvfcSupported, type FrameInfo } from '../pipeline/frames';
 import { createPoseAnalyzer, type PoseAnalyzer } from '../pipeline/pose';
+import { detectPhases, type PhaseResult } from '../pipeline/phases';
 import type { FramePose, Landmark } from '../pipeline/types';
 import { LM } from '../pipeline/landmarks';
+import { PhaseChart } from './PhaseChart';
 import './VideoScrubber.css';
 
 type Status = 'idle' | 'scanning' | 'ready' | 'error';
@@ -99,10 +101,40 @@ export function VideoScrubber() {
   const [error, setError] = useState('');
 
   const [poses, setPoses] = useState<FramePose[] | null>(null);
+  const [phase, setPhase] = useState<PhaseResult | null>(null);
   const [poseStatus, setPoseStatus] = useState<PoseStatus>('none');
   const [poseStage, setPoseStage] = useState('');
   const [poseProgress, setPoseProgress] = useState(0);
   const [showOverlay, setShowOverlay] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const copyDebug = async () => {
+    if (!phase) return;
+    const round = (v: number) => Math.round(v * 10000) / 10000;
+    const payload = {
+      clip: fileName,
+      frameCount: frames.length,
+      effectiveFps: round(effectiveFps),
+      mediaTimes: frames.map((f) => round(f.mediaTime)),
+      rawFootY: phase.rawFootY.map(round),
+      rawHipY: phase.rawHipY.map(round),
+      smoothFootY: phase.footY.map(round),
+      smoothHipY: phase.hipY.map(round),
+      groundBaseline: round(phase.groundBaseline),
+      airborneThreshold: round(phase.airborneThreshold),
+      apexFrame: phase.apexFrame,
+      detected: {
+        takeoffFrame: phase.takeoffFrame,
+        landingFrame: phase.landingFrame,
+        flightTimeMs: Math.round(phase.flightTimeS * 1000),
+        crossTakeoffFrame: phase.crossTakeoffFrame,
+        crossLandingFrame: phase.crossLandingFrame,
+      },
+    };
+    await navigator.clipboard.writeText(JSON.stringify(payload));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   const show = useCallback(
     async (i: number) => {
@@ -168,6 +200,7 @@ export function VideoScrubber() {
     setProgress(0);
     setError('');
     setPoses(null);
+    setPhase(null);
     setPoseStatus('none');
     setDims(null);
     setStatus('idle');
@@ -218,11 +251,13 @@ export function VideoScrubber() {
     setPoseProgress(0);
     setPoseStage('Starting…');
     setPoses(null);
+    setPhase(null);
     try {
       await analyzer.init(setPoseStage);
       const result = await analyzer.analyze(video, frames, setPoseProgress, ac.signal);
       if (ac.signal.aborted) return;
       setPoses(result);
+      setPhase(detectPhases(result, frames));
       setPoseStatus('done');
       await seekTo(video, frameSeekTime(frames, index));
     } catch (err) {
@@ -364,6 +399,42 @@ export function VideoScrubber() {
               <dd className={dropped > 0 ? 'warn' : undefined}>{dropped}</dd>
             </div>
           </dl>
+
+          {phase && !phase.ok && (
+            <p className="scrubber__note">⚠️ {phase.message}</p>
+          )}
+
+          {phase && phase.ok && (
+            <div className="scrubber__phases">
+              <div className="scrubber__phasehead">
+                <div className="scrubber__flight">
+                  <span className="scrubber__flightlabel">Flight time</span>
+                  <span className="scrubber__flightval">{(phase.flightTimeS * 1000).toFixed(0)} ms</span>
+                </div>
+                <div className="scrubber__phasebtns">
+                  <button onClick={() => void show(phase.takeoffFrame)}>
+                    Go to takeoff (#{phase.takeoffFrame + 1})
+                  </button>
+                  <button onClick={() => void show(phase.landingFrame)}>
+                    Go to landing (#{phase.landingFrame + 1})
+                  </button>
+                  <button onClick={() => void copyDebug()}>
+                    {copied ? 'Copied ✓' : 'Copy debug data'}
+                  </button>
+                </div>
+              </div>
+
+              <PhaseChart phase={phase} currentIndex={index} onSeekFrame={(f) => void show(f)} />
+
+              <p className="scrubber__crosscheck">
+                Foot cross-check — takeoff {phase.takeoffAgreement < 0 ? 'n/a' : `±${phase.takeoffAgreement} frame(s)`},
+                landing {phase.landingAgreement < 0 ? 'n/a' : `±${phase.landingAgreement} frame(s)`}.
+                {(phase.takeoffAgreement > 3 || phase.landingAgreement > 3) && (
+                  <span className="warn"> Hip &amp; foot methods disagree — expected on low-fps / noisy clips.</span>
+                )}
+              </p>
+            </div>
+          )}
 
           {displayCapped && (
             <p className="scrubber__note">

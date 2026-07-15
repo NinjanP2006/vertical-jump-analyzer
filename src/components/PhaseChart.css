@@ -1,0 +1,100 @@
+.phasechart {
+  background: #0b0f19;
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+.phasechart__svg {
+  width: 100%;
+  height: 160px;
+  display: block;
+  cursor: crosshair;
+}
+
+/* series */
+.pc-foot {
+  fill: none;
+  stroke: #f472b6;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.pc-hip {
+  fill: none;
+  stroke: #34d399;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* reference lines */
+.pc-baseline {
+  stroke: #6b7280;
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  vector-effect: non-scaling-stroke;
+}
+.pc-threshold {
+  stroke: #a16207;
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  vector-effect: non-scaling-stroke;
+}
+.pc-takeoff {
+  stroke: #22d3ee;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.pc-landing {
+  stroke: #fb923c;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.pc-current {
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.pc-com {
+  fill: #e5e7eb;
+  stroke: #0b0f19;
+  stroke-width: 1;
+}
+
+.phasechart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  align-items: center;
+}
+.pc-lg::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 0.3rem;
+  vertical-align: middle;
+}
+.pc-lg--foot::before {
+  background: #f472b6;
+}
+.pc-lg--hip::before {
+  background: #34d399;
+}
+.pc-lg--takeoff::before {
+  background: #22d3ee;
+}
+.pc-lg--landing::before {
+  background: #fb923c;
+}
+.pc-lg--com::before {
+  background: #e5e7eb;
+  border-radius: 50%;
+}
+.phasechart__hint {
+  margin-left: auto;
+  font-style: italic;
+  color: #6b7280;
+}
