@@ -2,13 +2,13 @@
   "$comment": "Ground-truth test clips. This is the backbone of every accuracy check (Milestone 4). Add one entry per filmed jump. Keep the video files next to this file (they are git-ignored). Measure trueHeightCm as honestly as you can — wall-reach delta, jump mat, or Vertec.",
   "clips": [
     {
-      "id": "example-001",
-      "file": "example-001.mp4",
-      "trueHeightCm": 0,
+      "id": "IMG_8884",
+      "file": "IMG_8884.MOV",
+      "trueHeightCm": 33,
       "athlete": "you",
-      "capturedFps": 120,
+      "capturedFps": 60,
       "referenceMethod": "wall-reach",
-      "notes": "REPLACE THIS. One entry per clip. trueHeightCm is the measured ground truth."
+      "notes": "Slightly inaccurate."
     }
   ]
 }

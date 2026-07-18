@@ -192,8 +192,20 @@ export function detectPhases(poses: FramePose[], frames: FrameInfo[]): PhaseResu
     }
   }
 
-  const flightTimeS =
-    takeoffFrame >= 0 && landingFrame >= 0 ? Math.max(0, mt(landingFrame) - mt(takeoffFrame)) : 0;
+  // Frame-boundary correction. Takeoff happens at some instant BETWEEN the last grounded frame
+  // and the detected takeoff frame; landing likewise between the detected landing frame and the
+  // next. Measuring frame-centre to frame-centre truncates that partial frame at each end and
+  // biases flight time short (~1 frame total). Bracketing each transition at the midpoint to its
+  // neighbour is the unbiased estimator for a discretely-sampled interval. Uses real neighbour
+  // timestamps so it stays correct under variable frame rates.
+  let flightTimeS = 0;
+  if (takeoffFrame >= 0 && landingFrame > takeoffFrame) {
+    const t0 =
+      takeoffFrame > 0 ? (mt(takeoffFrame - 1) + mt(takeoffFrame)) / 2 : mt(takeoffFrame);
+    const t1 =
+      landingFrame < N - 1 ? (mt(landingFrame) + mt(landingFrame + 1)) / 2 : mt(landingFrame);
+    flightTimeS = Math.max(0, t1 - t0);
+  }
 
   // CROSS-CHECK: foot baseline crossings around the apex.
   const mad = median(footY.map((v) => Math.abs(v - footBaseline)));

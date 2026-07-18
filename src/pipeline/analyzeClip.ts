@@ -2,10 +2,11 @@
 // height. This is the shared code path used by the validation harness and, later, the product
 // result flow — so what we validate is exactly what ships.
 
-import { scanFrames } from './frames';
+import { scanFrames, type FrameInfo } from './frames';
 import { detectPhases, type PhaseResult } from './phases';
 import type { PoseAnalyzer } from './pose';
 import { jumpHeightFromFlightTime } from './height';
+import type { FramePose } from './types';
 
 export interface ClipAnalysis {
   ok: boolean;
@@ -17,6 +18,11 @@ export interface ClipAnalysis {
   takeoffFrame: number;
   landingFrame: number;
   phase: PhaseResult;
+  /** Frame index + poses, so a result screen can seek to takeoff/landing and draw overlays. */
+  frames: FrameInfo[];
+  poses: FramePose[];
+  videoWidth: number;
+  videoHeight: number;
 }
 
 function waitForMetadata(video: HTMLVideoElement): Promise<void> {
@@ -68,6 +74,10 @@ export async function analyzeClip(
       takeoffFrame: phase.takeoffFrame,
       landingFrame: phase.landingFrame,
       phase,
+      frames: scan.frames,
+      poses,
+      videoWidth: video.videoWidth,
+      videoHeight: video.videoHeight,
     };
   } finally {
     if (typeof source !== 'string') URL.revokeObjectURL(url);

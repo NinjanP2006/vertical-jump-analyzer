@@ -23,9 +23,10 @@ export function ValidationPanel() {
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  // Match on lowercased names: clips.json often says .MOV while the file on disk is .mov.
   const onFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const map = new Map<string, File>();
-    for (const f of Array.from(e.target.files ?? [])) map.set(f.name, f);
+    for (const f of Array.from(e.target.files ?? [])) map.set(f.name.toLowerCase(), f);
     setFiles(map);
     setRows({});
   };
@@ -40,7 +41,7 @@ export function ValidationPanel() {
 
     for (let i = 0; i < fixtures.length; i++) {
       const fx = fixtures[i];
-      const file = files.get(fx.file);
+      const file = files.get(fx.file.toLowerCase());
       if (!file) {
         setRows((r) => ({ ...r, [fx.id]: { status: 'nofile' } }));
         continue;
@@ -82,7 +83,7 @@ export function ValidationPanel() {
     };
   }, [rows]);
 
-  const matchedCount = fixtures.filter((fx) => files.has(fx.file)).length;
+  const matchedCount = fixtures.filter((fx) => files.has(fx.file.toLowerCase())).length;
 
   return (
     <div className="validation">
