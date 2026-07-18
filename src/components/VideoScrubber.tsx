@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { scanFrames, frameSeekTime, seekTo, isRvfcSupported, type FrameInfo } from '../pipeline/frames';
 import { createPoseAnalyzer, type PoseAnalyzer } from '../pipeline/pose';
 import { detectPhases, type PhaseResult } from '../pipeline/phases';
+import { jumpHeightFromFlightTime, formatHeight } from '../pipeline/height';
 import type { FramePose, Landmark } from '../pipeline/types';
 import { LM } from '../pipeline/landmarks';
 import { PhaseChart } from './PhaseChart';
@@ -408,8 +409,13 @@ export function VideoScrubber() {
             <div className="scrubber__phases">
               <div className="scrubber__phasehead">
                 <div className="scrubber__flight">
-                  <span className="scrubber__flightlabel">Flight time</span>
-                  <span className="scrubber__flightval">{(phase.flightTimeS * 1000).toFixed(0)} ms</span>
+                  <span className="scrubber__flightlabel">Jump height</span>
+                  <span className="scrubber__flightval">
+                    {formatHeight(jumpHeightFromFlightTime(phase.flightTimeS))}
+                  </span>
+                  <span className="scrubber__flightsub">
+                    flight {(phase.flightTimeS * 1000).toFixed(0)} ms
+                  </span>
                 </div>
                 <div className="scrubber__phasebtns">
                   <button onClick={() => void show(phase.takeoffFrame)}>

@@ -1,17 +1,31 @@
+import { useState } from 'react';
 import { VideoScrubber } from './components/VideoScrubber';
+import { ValidationPanel } from './components/ValidationPanel';
 import './App.css';
 
+type Tab = 'analyzer' | 'validation';
+
 function App() {
+  const [tab, setTab] = useState<Tab>('analyzer');
+
   return (
     <main className="app">
       <header className="app__header">
         <h1>Vertical Jump Analyzer</h1>
         <p className="app__subtitle">
-          Dev frame scrubber (Milestone 1) — load a clip, step frame-by-frame with ← / →, and read
-          the true per-frame timestamps the height calculation will depend on.
+          Dev build — load a clip, run pose + takeoff/landing detection, and get a flight-time
+          jump height. Use Validation to check computed heights against measured ground truth.
         </p>
+        <nav className="app__tabs">
+          <button className={tab === 'analyzer' ? 'active' : ''} onClick={() => setTab('analyzer')}>
+            Analyzer
+          </button>
+          <button className={tab === 'validation' ? 'active' : ''} onClick={() => setTab('validation')}>
+            Validation
+          </button>
+        </nav>
       </header>
-      <VideoScrubber />
+      {tab === 'analyzer' ? <VideoScrubber /> : <ValidationPanel />}
     </main>
   );
 }

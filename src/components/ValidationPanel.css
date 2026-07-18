@@ -1,0 +1,123 @@
+.validation {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.validation__intro {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.validation__intro code {
+  background: #1f2937;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.validation__controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.validation__file {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #1f2937;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+}
+.validation__file input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.validation__matched {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+.validation__controls button {
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+.validation__controls button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.validation__summary {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+.validation__summary.ok {
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: #34d399;
+}
+.validation__summary.warn {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+.validation__tablewrap {
+  overflow-x: auto;
+}
+.validation__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+.validation__table th,
+.validation__table td {
+  text-align: right;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid #1f2937;
+  white-space: nowrap;
+}
+.validation__table th:first-child,
+.validation__table td:first-child {
+  text-align: left;
+}
+.validation__table th {
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.validation__table .good {
+  color: #34d399;
+}
+.validation__table .bad {
+  color: #f87171;
+}
+.validation__table .warn {
+  color: #fbbf24;
+}
+.validation__table .muted {
+  color: #6b7280;
+}
+
+.validation__video {
+  width: 240px;
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  align-self: flex-start;
+}

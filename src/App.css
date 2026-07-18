@@ -21,3 +21,24 @@
   font-size: 0.92rem;
   line-height: 1.5;
 }
+
+.app__tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  border-bottom: 1px solid #1f2937;
+}
+.app__tabs button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.app__tabs button.active {
+  color: #e5e7eb;
+  border-bottom-color: #2563eb;
+}

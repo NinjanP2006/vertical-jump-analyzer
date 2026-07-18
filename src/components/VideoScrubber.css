@@ -205,6 +205,10 @@
   font-variant-numeric: tabular-nums;
   color: #e5e7eb;
 }
+.scrubber__flightsub {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
 .scrubber__phasebtns {
   display: flex;
   gap: 0.5rem;
