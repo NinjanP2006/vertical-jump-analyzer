@@ -42,3 +42,28 @@
   color: #e5e7eb;
   border-bottom-color: #2563eb;
 }
+
+@media (max-width: 600px) {
+  .app {
+    padding: 1.25rem 0.9rem 3rem;
+  }
+  .app__header h1 {
+    font-size: 1.3rem;
+  }
+  .app__subtitle {
+    font-size: 0.86rem;
+  }
+  /* Tabs scroll rather than wrap into a ragged block on narrow screens. */
+  .app__tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .app__tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .app__tabs button {
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+  }
+}

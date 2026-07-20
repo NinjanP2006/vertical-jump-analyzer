@@ -232,6 +232,22 @@
   color: #fbbf24;
 }
 
+@media (max-width: 600px) {
+  .scrubber__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0.85rem;
+  }
+  .scrubber__stats dd {
+    font-size: 0.95rem;
+  }
+  .scrubber__controls button {
+    min-width: 2.5rem;
+  }
+  .scrubber__phasehead {
+    align-items: flex-start;
+  }
+}
+
 .scrubber__note {
   margin: 0;
   padding: 0.75rem 1rem;
