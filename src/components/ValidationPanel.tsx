@@ -52,7 +52,12 @@ export function ValidationPanel() {
         setRows((r) => ({
           ...r,
           [fx.id]: res.ok
-            ? { status: 'done', computedCm: res.heightCm, flightMs: res.flightTimeS * 1000, fps: res.effectiveFps }
+            ? {
+                status: 'done',
+                computedCm: res.heightCm,
+                flightMs: res.flightTimeS * 1000,
+                fps: res.effectiveFps,
+              }
             : { status: 'error', message: res.message },
         }));
       } catch (err) {
@@ -88,9 +93,9 @@ export function ValidationPanel() {
   return (
     <div className="validation">
       <p className="validation__intro">
-        Runs the exact product pipeline (MediaPipe → takeoff/landing → flight-time height) over
-        the clips listed in <code>fixtures/clips.json</code> and compares against your measured
-        heights. Select the matching video files below (they stay on your device).
+        Runs the exact product pipeline (MediaPipe → takeoff/landing → flight-time height) over the
+        clips listed in <code>fixtures/clips.json</code> and compares against your measured heights.
+        Select the matching video files below (they stay on your device).
       </p>
 
       <div className="validation__controls">
@@ -108,8 +113,11 @@ export function ValidationPanel() {
 
       {summary && (
         <div className={`validation__summary ${summary.max <= 2 ? 'ok' : 'warn'}`}>
-          <strong>{summary.within2}/{summary.n}</strong> within ±2 cm · mean abs error{' '}
-          <strong>{summary.mean.toFixed(2)} cm</strong> · max <strong>{summary.max.toFixed(2)} cm</strong>
+          <strong>
+            {summary.within2}/{summary.n}
+          </strong>{' '}
+          within ±2 cm · mean abs error <strong>{summary.mean.toFixed(2)} cm</strong> · max{' '}
+          <strong>{summary.max.toFixed(2)} cm</strong>
         </div>
       )}
 
@@ -139,7 +147,9 @@ export function ValidationPanel() {
                   <td>{fx.id}</td>
                   <td>{fx.trueHeightCm > 0 ? fx.trueHeightCm.toFixed(1) : '—'}</td>
                   <td>{row?.computedCm != null ? row.computedCm.toFixed(1) : '—'}</td>
-                  <td className={errClass}>{err != null ? `${err >= 0 ? '+' : ''}${err.toFixed(1)}` : '—'}</td>
+                  <td className={errClass}>
+                    {err != null ? `${err >= 0 ? '+' : ''}${err.toFixed(1)}` : '—'}
+                  </td>
                   <td>{row?.flightMs != null ? Math.round(row.flightMs) : '—'}</td>
                   <td className={row?.fps != null && row.fps < 70 ? 'warn' : ''}>
                     {row?.fps != null ? row.fps.toFixed(0) : '—'}
@@ -148,7 +158,11 @@ export function ValidationPanel() {
                     {row?.status === 'nofile' && <span className="muted">no file</span>}
                     {row?.status === 'running' && 'running…'}
                     {row?.status === 'done' && <span className="good">ok</span>}
-                    {row?.status === 'error' && <span className="bad" title={row.message}>error</span>}
+                    {row?.status === 'error' && (
+                      <span className="bad" title={row.message}>
+                        error
+                      </span>
+                    )}
                     {!row && <span className="muted">—</span>}
                   </td>
                 </tr>

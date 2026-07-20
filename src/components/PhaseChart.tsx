@@ -38,23 +38,57 @@ export function PhaseChart({ phase, currentIndex, onSeekFrame }: Props) {
         onClick={handleClick}
       >
         {/* ground baseline + airborne threshold */}
-        <line x1={0} x2={W} y1={y(phase.groundBaseline)} y2={y(phase.groundBaseline)} className="pc-baseline" />
-        <line x1={0} x2={W} y1={y(phase.airborneThreshold)} y2={y(phase.airborneThreshold)} className="pc-threshold" />
+        <line
+          x1={0}
+          x2={W}
+          y1={y(phase.groundBaseline)}
+          y2={y(phase.groundBaseline)}
+          className="pc-baseline"
+        />
+        <line
+          x1={0}
+          x2={W}
+          y1={y(phase.airborneThreshold)}
+          y2={y(phase.airborneThreshold)}
+          className="pc-threshold"
+        />
 
         {/* takeoff / landing verticals */}
         {phase.takeoffFrame >= 0 && (
-          <line x1={x(phase.takeoffFrame)} x2={x(phase.takeoffFrame)} y1={0} y2={H} className="pc-takeoff" />
+          <line
+            x1={x(phase.takeoffFrame)}
+            x2={x(phase.takeoffFrame)}
+            y1={0}
+            y2={H}
+            className="pc-takeoff"
+          />
         )}
         {phase.landingFrame >= 0 && (
-          <line x1={x(phase.landingFrame)} x2={x(phase.landingFrame)} y1={0} y2={H} className="pc-landing" />
+          <line
+            x1={x(phase.landingFrame)}
+            x2={x(phase.landingFrame)}
+            y1={0}
+            y2={H}
+            className="pc-landing"
+          />
         )}
 
         {/* foot cross-check ticks (on the feet trajectory) */}
         {phase.crossTakeoffFrame >= 0 && (
-          <circle cx={x(phase.crossTakeoffFrame)} cy={y(phase.footY[phase.crossTakeoffFrame])} r={3} className="pc-com" />
+          <circle
+            cx={x(phase.crossTakeoffFrame)}
+            cy={y(phase.footY[phase.crossTakeoffFrame])}
+            r={3}
+            className="pc-com"
+          />
         )}
         {phase.crossLandingFrame >= 0 && (
-          <circle cx={x(phase.crossLandingFrame)} cy={y(phase.footY[phase.crossLandingFrame])} r={3} className="pc-com" />
+          <circle
+            cx={x(phase.crossLandingFrame)}
+            cy={y(phase.footY[phase.crossLandingFrame])}
+            r={3}
+            className="pc-com"
+          />
         )}
 
         {/* trajectories */}

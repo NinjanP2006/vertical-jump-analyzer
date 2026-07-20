@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { scanFrames, frameSeekTime, seekTo, isRvfcSupported, type FrameInfo } from '../pipeline/frames';
+import {
+  scanFrames,
+  frameSeekTime,
+  seekTo,
+  isRvfcSupported,
+  type FrameInfo,
+} from '../pipeline/frames';
 import { createPoseAnalyzer, type PoseAnalyzer } from '../pipeline/pose';
 import { detectPhases, type PhaseResult } from '../pipeline/phases';
 import { jumpHeightFromFlightTime, formatHeight } from '../pipeline/height';
@@ -208,7 +214,9 @@ export function VideoScrubber() {
     video.src = url;
 
     if (!isRvfcSupported(video)) {
-      setError('This browser does not support requestVideoFrameCallback. Use Chrome, Edge, or Safari.');
+      setError(
+        'This browser does not support requestVideoFrameCallback. Use Chrome, Edge, or Safari.',
+      );
       setStatus('error');
       return;
     }
@@ -288,7 +296,9 @@ export function VideoScrubber() {
 
       <div className="scrubber__stage" style={stageStyle}>
         <video ref={videoRef} className="scrubber__video" muted playsInline preload="auto" />
-        {dims && <canvas ref={canvasRef} className="scrubber__canvas" width={dims.w} height={dims.h} />}
+        {dims && (
+          <canvas ref={canvasRef} className="scrubber__canvas" width={dims.w} height={dims.h} />
+        )}
         {status === 'idle' && !fileName && (
           <div className="scrubber__placeholder">Load a clip to begin.</div>
         )}
@@ -297,7 +307,9 @@ export function VideoScrubber() {
         )}
         {poseStatus === 'analyzing' && (
           <div className="scrubber__overlay">
-            {poseProgress === 0 ? poseStage || 'Loading pose model…' : `Analyzing pose… ${Math.round(poseProgress * 100)}%`}
+            {poseProgress === 0
+              ? poseStage || 'Loading pose model…'
+              : `Analyzing pose… ${Math.round(poseProgress * 100)}%`}
           </div>
         )}
         {(status === 'error' || poseStatus === 'error') && (
@@ -311,7 +323,11 @@ export function VideoScrubber() {
             <button onClick={() => void show(0)} disabled={index === 0} title="First frame">
               |◀
             </button>
-            <button onClick={() => void show(index - 1)} disabled={index === 0} title="Previous frame (←)">
+            <button
+              onClick={() => void show(index - 1)}
+              disabled={index === 0}
+              title="Previous frame (←)"
+            >
               ◀
             </button>
             <input
@@ -401,9 +417,7 @@ export function VideoScrubber() {
             </div>
           </dl>
 
-          {phase && !phase.ok && (
-            <p className="scrubber__note">⚠️ {phase.message}</p>
-          )}
+          {phase && !phase.ok && <p className="scrubber__note">⚠️ {phase.message}</p>}
 
           {phase && phase.ok && (
             <div className="scrubber__phases">
@@ -433,10 +447,15 @@ export function VideoScrubber() {
               <PhaseChart phase={phase} currentIndex={index} onSeekFrame={(f) => void show(f)} />
 
               <p className="scrubber__crosscheck">
-                Foot cross-check — takeoff {phase.takeoffAgreement < 0 ? 'n/a' : `±${phase.takeoffAgreement} frame(s)`},
-                landing {phase.landingAgreement < 0 ? 'n/a' : `±${phase.landingAgreement} frame(s)`}.
+                Foot cross-check — takeoff{' '}
+                {phase.takeoffAgreement < 0 ? 'n/a' : `±${phase.takeoffAgreement} frame(s)`},
+                landing {phase.landingAgreement < 0 ? 'n/a' : `±${phase.landingAgreement} frame(s)`}
+                .
                 {(phase.takeoffAgreement > 3 || phase.landingAgreement > 3) && (
-                  <span className="warn"> Hip &amp; foot methods disagree — expected on low-fps / noisy clips.</span>
+                  <span className="warn">
+                    {' '}
+                    Hip &amp; foot methods disagree — expected on low-fps / noisy clips.
+                  </span>
                 )}
               </p>
             </div>

@@ -139,9 +139,13 @@ export function JumpAnalyzer() {
           {result.ok && height ? (
             <div className="ja__hero">
               <span className="ja__herolabel">Jump height</span>
-              <span className="ja__heroval">{height.cm.toFixed(1)}<small>cm</small></span>
+              <span className="ja__heroval">
+                {height.cm.toFixed(1)}
+                <small>cm</small>
+              </span>
               <span className="ja__herosub">
-                {height.inches.toFixed(1)} in · {(result.flightTimeS * 1000).toFixed(0)} ms in the air
+                {height.inches.toFixed(1)} in · {(result.flightTimeS * 1000).toFixed(0)} ms in the
+                air
               </span>
             </div>
           ) : (

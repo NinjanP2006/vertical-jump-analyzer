@@ -159,7 +159,8 @@ export function detectPhases(poses: FramePose[], frames: FrameInfo[]): PhaseResu
   if (!Number.isFinite(hipRise) || hipRise < MIN_JUMP_RANGE || apexFrame < 1 || apexFrame > N - 2) {
     return {
       ...base,
-      message: 'No clear jump detected — the hips never rise enough. Make sure the whole body is in frame and the clip contains a real jump.',
+      message:
+        'No clear jump detected — the hips never rise enough. Make sure the whole body is in frame and the clip contains a real jump.',
     };
   }
 
@@ -200,8 +201,7 @@ export function detectPhases(poses: FramePose[], frames: FrameInfo[]): PhaseResu
   // timestamps so it stays correct under variable frame rates.
   let flightTimeS = 0;
   if (takeoffFrame >= 0 && landingFrame > takeoffFrame) {
-    const t0 =
-      takeoffFrame > 0 ? (mt(takeoffFrame - 1) + mt(takeoffFrame)) / 2 : mt(takeoffFrame);
+    const t0 = takeoffFrame > 0 ? (mt(takeoffFrame - 1) + mt(takeoffFrame)) / 2 : mt(takeoffFrame);
     const t1 =
       landingFrame < N - 1 ? (mt(landingFrame) + mt(landingFrame + 1)) / 2 : mt(landingFrame);
     flightTimeS = Math.max(0, t1 - t0);
@@ -225,10 +225,8 @@ export function detectPhases(poses: FramePose[], frames: FrameInfo[]): PhaseResu
     crossTakeoffFrame = s;
     crossLandingFrame = Math.min(N - 1, e + 1);
   }
-  const takeoffAgreement =
-    crossTakeoffFrame >= 0 ? Math.abs(crossTakeoffFrame - takeoffFrame) : -1;
-  const landingAgreement =
-    crossLandingFrame >= 0 ? Math.abs(crossLandingFrame - landingFrame) : -1;
+  const takeoffAgreement = crossTakeoffFrame >= 0 ? Math.abs(crossTakeoffFrame - takeoffFrame) : -1;
+  const landingAgreement = crossLandingFrame >= 0 ? Math.abs(crossLandingFrame - landingFrame) : -1;
 
   return {
     ok: true,
