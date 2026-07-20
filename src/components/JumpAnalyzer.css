@@ -37,6 +37,21 @@
   opacity: 0;
   cursor: pointer;
 }
+.ja__record {
+  margin-top: 1.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+  background: transparent;
+  color: #cbd5e1;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.ja__record:hover {
+  border-color: #2563eb;
+  color: #e5e7eb;
+}
+
 .ja__tips {
   margin: 1.25rem 0 0;
   padding: 0;

@@ -4,9 +4,10 @@ import { analyzeClip, type ClipAnalysis } from '../pipeline/analyzeClip';
 import { checkInput, type InputWarning } from '../pipeline/inputChecks';
 import { jumpHeightFromFlightTime } from '../pipeline/height';
 import { frameSeekTime, seekTo } from '../pipeline/frames';
+import { CaptureRecorder } from './CaptureRecorder';
 import './JumpAnalyzer.css';
 
-type Stage = 'idle' | 'analyzing' | 'result' | 'error';
+type Stage = 'idle' | 'capture' | 'analyzing' | 'result' | 'error';
 
 export function JumpAnalyzer() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -109,7 +110,14 @@ export function JumpAnalyzer() {
             <li>Landscape, steady camera, good lighting</li>
             <li>60 fps normal video — not slow-motion</li>
           </ul>
+          <button className="ja__record" onClick={() => setStage('capture')}>
+            Or record with your camera
+          </button>
         </div>
+      )}
+
+      {stage === 'capture' && (
+        <CaptureRecorder onRecorded={(f) => void run(f)} onCancel={() => setStage('idle')} />
       )}
 
       {stage === 'analyzing' && (
@@ -176,7 +184,7 @@ export function JumpAnalyzer() {
       {/* Shared surface: used for processing, then as the replay. Hidden until there's a clip. */}
       <video
         ref={videoRef}
-        className={`ja__video ${stage === 'idle' ? 'ja__video--hidden' : ''}`}
+        className={`ja__video ${stage === 'idle' || stage === 'capture' ? 'ja__video--hidden' : ''}`}
         muted
         playsInline
         preload="auto"

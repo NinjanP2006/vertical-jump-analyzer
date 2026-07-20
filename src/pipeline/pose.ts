@@ -24,6 +24,8 @@ const MODEL_URL =
 
 export interface PoseAnalyzer {
   init(onStatus?: (stage: string) => void): Promise<void>;
+  /** Single-frame detection against a live element — used for capture framing feedback. */
+  detectFrame(video: HTMLVideoElement, timestampMs: number): FramePose | null;
   analyze(
     video: HTMLVideoElement,
     frames: FrameInfo[],
@@ -35,6 +37,8 @@ export interface PoseAnalyzer {
 
 export function createPoseAnalyzer(): PoseAnalyzer {
   let landmarker: PoseLandmarker | null = null;
+  // Shared across live checks and clip runs so detectForVideo never sees a timestamp regression.
+  let liveTs = 0;
 
   return {
     async init(onStatus) {
@@ -62,10 +66,24 @@ export function createPoseAnalyzer(): PoseAnalyzer {
       onStatus?.('Model ready');
     },
 
+    detectFrame(video, timestampMs) {
+      if (!landmarker || video.readyState < 2) return null;
+      const ts = Math.max(Math.round(timestampMs), liveTs + 1);
+      liveTs = ts;
+      const result = landmarker.detectForVideo(video, ts);
+      const lm = result.landmarks?.[0] ?? [];
+      return {
+        frameIndex: 0,
+        mediaTime: ts / 1000,
+        landmarks: lm.map((p) => ({ x: p.x, y: p.y, z: p.z ?? 0, visibility: p.visibility ?? 0 })),
+      };
+    },
+
     async analyze(video, frames, onProgress, signal) {
       if (!landmarker) throw new Error('Pose analyzer not initialized — call init() first.');
-      // detectForVideo requires strictly increasing timestamps; guard against ties/rounding.
-      let lastTs = -1;
+      // detectForVideo requires strictly increasing timestamps; guard against ties/rounding and
+      // against regressing below any timestamp already consumed by live framing checks.
+      let lastTs = liveTs;
       const poses: FramePose[] = [];
       for (let i = 0; i < frames.length; i++) {
         if (signal?.aborted) throw new DOMException('Analysis aborted', 'AbortError');
@@ -74,6 +92,7 @@ export function createPoseAnalyzer(): PoseAnalyzer {
         let ts = Math.round(f.mediaTime * 1000);
         if (ts <= lastTs) ts = lastTs + 1;
         lastTs = ts;
+        liveTs = ts;
         const result = landmarker.detectForVideo(video, ts);
         const lm = result.landmarks?.[0] ?? [];
         poses.push({
