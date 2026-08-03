@@ -7,8 +7,7 @@ export function HomePage() {
       <section className="home__hero">
         <h1 className="home__title">Know your vertical.</h1>
         <p className="home__tagline">
-          Film a jump, get your vertical in centimetres. No jump mat, no measuring tape, no
-          equipment — just your phone.
+          Film a jump, and upload it to get your vertical.
         </p>
 
         <div className="home__cta">
