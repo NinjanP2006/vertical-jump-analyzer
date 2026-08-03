@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+# CDK
+infra/cdk.out
+infra/*.d.ts
+infra/*.js
+cdk.context.json
+
+# pnpm artifacts (infra deploys with npm; pnpm was only used for local validation)
+infra/pnpm-lock.yaml
+infra/pnpm-workspace.yaml
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
