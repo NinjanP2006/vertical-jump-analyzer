@@ -22,6 +22,9 @@ cdk.context.json
 infra/pnpm-lock.yaml
 infra/pnpm-workspace.yaml
 
+# CDK deploy outputs (resource IDs — regenerate with `cdk deploy --outputs-file`)
+infra/cdk-outputs.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

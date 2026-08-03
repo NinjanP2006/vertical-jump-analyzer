@@ -66,10 +66,10 @@ export class BackendStack extends cdk.Stack {
     // --- Compute: one Lambda per route (least privilege) -----------------------------------
     const fn = (name: string, entry: string) =>
       new NodejsFunction(this, name, {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_22_X,
         entry: path.join(__dirname, `../lambda/${entry}`),
         environment: { TABLE_NAME: table.tableName },
-        bundling: { minify: true, target: 'node20' },
+        bundling: { minify: true, target: 'node22' },
         timeout: cdk.Duration.seconds(10),
       });
 
