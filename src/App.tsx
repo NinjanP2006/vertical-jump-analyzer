@@ -2,16 +2,57 @@ import { useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { HomePage } from './components/HomePage';
 import { JumpAnalyzer } from './components/JumpAnalyzer';
+import { HistoryPage } from './components/HistoryPage';
 import { VideoScrubber } from './components/VideoScrubber';
 import { ValidationPanel } from './components/ValidationPanel';
+import { useAuth } from './auth/useAuth';
 import './App.css';
+
+function AuthControl() {
+  const { user, loading, configured, login, logout } = useAuth();
+  // When Cognito env isn't set, accounts are unavailable — show an honest placeholder note.
+  const [showNote, setShowNote] = useState(false);
+
+  if (!configured) {
+    return (
+      <>
+        <button className="app__login" onClick={() => setShowNote((v) => !v)}>
+          Log in / Sign up
+        </button>
+        {showNote && (
+          <p className="app__authnote" role="status">
+            Accounts aren&apos;t enabled in this build. You can measure your jump right now without
+            one.
+          </p>
+        )}
+      </>
+    );
+  }
+
+  if (loading) return <span className="app__authloading">…</span>;
+
+  if (user) {
+    return (
+      <div className="app__account">
+        {user.email && <span className="app__email">{user.email}</span>}
+        <button className="app__login" onClick={logout}>
+          Log out
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button className="app__login" onClick={login}>
+      Log in / Sign up
+    </button>
+  );
+}
 
 function AppHeader() {
   const { pathname } = useLocation();
   const onHome = pathname === '/';
-  // Accounts are out of scope for this MVP, so this is an honest placeholder rather than a
-  // fake login form.
-  const [showAuthNote, setShowAuthNote] = useState(false);
+  const { user } = useAuth();
 
   return (
     <header className="app__header">
@@ -19,17 +60,7 @@ function AppHeader() {
         <Link className="app__brand" to="/">
           Vertical Jump Analyzer
         </Link>
-        <button className="app__login" onClick={() => setShowAuthNote((v) => !v)}>
-          Log in / Sign up
-        </button>
-
-        {/* Dropdown rather than inline, so opening it doesn't reflow the page below. */}
-        {showAuthNote && (
-          <p className="app__authnote" role="status">
-            Accounts aren&apos;t built yet — they&apos;re coming with saved jump history so you can
-            track progress over time. You can measure your jump right now without one.
-          </p>
-        )}
+        <AuthControl />
       </div>
 
       {!onHome && (
@@ -37,6 +68,11 @@ function AppHeader() {
           <NavLink to="/analyze" className={({ isActive }) => (isActive ? 'active' : '')}>
             Analyze
           </NavLink>
+          {user && (
+            <NavLink to="/history" className={({ isActive }) => (isActive ? 'active' : '')}>
+              History
+            </NavLink>
+          )}
           <NavLink to="/dev" className={({ isActive }) => (isActive ? 'active' : '')}>
             Dev scrubber
           </NavLink>
@@ -67,6 +103,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/analyze" element={<JumpAnalyzer />} />
+            <Route path="/history" element={<HistoryPage />} />
             <Route path="/dev" element={<VideoScrubber />} />
             <Route path="/validation" element={<ValidationPanel />} />
             <Route path="*" element={<NotFound />} />

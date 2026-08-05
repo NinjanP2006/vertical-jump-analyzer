@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { createPoseAnalyzer, type PoseAnalyzer } from '../pipeline/pose';
 import { analyzeClip, type ClipAnalysis } from '../pipeline/analyzeClip';
 import { checkInput, type InputWarning } from '../pipeline/inputChecks';
 import { jumpHeightFromFlightTime } from '../pipeline/height';
 import { frameSeekTime, seekTo } from '../pipeline/frames';
+import { useAuth } from '../auth/useAuth';
+import { saveJump } from '../api/jumps';
 import { CaptureRecorder } from './CaptureRecorder';
 import './JumpAnalyzer.css';
 
 type Stage = 'idle' | 'capture' | 'analyzing' | 'result' | 'error';
+type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 export function JumpAnalyzer() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -21,6 +25,9 @@ export function JumpAnalyzer() {
   const [warnings, setWarnings] = useState<InputWarning[]>([]);
   const [error, setError] = useState('');
   const [dragging, setDragging] = useState(false);
+  const [saveState, setSaveState] = useState<SaveState>('idle');
+  const [saveError, setSaveError] = useState('');
+  const { user, configured } = useAuth();
 
   useEffect(() => {
     return () => {
@@ -42,6 +49,8 @@ export function JumpAnalyzer() {
     setError('');
     setResult(null);
     setWarnings([]);
+    setSaveState('idle');
+    setSaveError('');
     setStatusText('Loading pose model…');
 
     if (!analyzerRef.current) analyzerRef.current = createPoseAnalyzer();
@@ -84,6 +93,25 @@ export function JumpAnalyzer() {
     setResult(null);
     setWarnings([]);
     setError('');
+    setSaveState('idle');
+  };
+
+  const save = async () => {
+    if (!result?.ok) return;
+    setSaveState('saving');
+    setSaveError('');
+    try {
+      await saveJump({
+        heightCm: Math.round(height!.cm * 10) / 10,
+        flightTimeMs: Math.round(result.flightTimeS * 1000),
+        fps: result.effectiveFps ? Math.round(result.effectiveFps) : null,
+        capturedAt: new Date().toISOString(),
+      });
+      setSaveState('saved');
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : String(err));
+      setSaveState('error');
+    }
   };
 
   const height = result?.ok ? jumpHeightFromFlightTime(result.flightTimeS) : null;
@@ -168,6 +196,25 @@ export function JumpAnalyzer() {
               Height is measured from time in the air: <code>h = g·t²/8</code>. Check the two frames
               below — if they show the feet leaving and touching the ground, the number is sound.
             </p>
+          )}
+
+          {result.ok && configured && (
+            <div className="ja__save">
+              {!user ? (
+                <span className="ja__savehint">Log in to save this jump to your history.</span>
+              ) : saveState === 'saved' ? (
+                <span className="ja__savedok">
+                  ✓ Saved. <Link to="/history">View history →</Link>
+                </span>
+              ) : (
+                <>
+                  <button onClick={() => void save()} disabled={saveState === 'saving'}>
+                    {saveState === 'saving' ? 'Saving…' : 'Save to my history'}
+                  </button>
+                  {saveState === 'error' && <span className="ja__saveerr">{saveError}</span>}
+                </>
+              )}
+            </div>
           )}
 
           <div className="ja__frames">

@@ -170,6 +170,41 @@
   border-radius: 4px;
 }
 
+.ja__save {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.ja__save button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+.ja__save button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.ja__savehint {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+.ja__savedok {
+  font-size: 0.88rem;
+  color: #34d399;
+}
+.ja__savedok a {
+  color: #60a5fa;
+}
+.ja__saveerr {
+  font-size: 0.82rem;
+  color: #fca5a5;
+}
+
 .ja__frames {
   display: flex;
   gap: 0.5rem;

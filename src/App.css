@@ -51,6 +51,24 @@
   color: #fff;
 }
 
+.app__account {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.app__email {
+  font-size: 0.82rem;
+  color: #9ca3af;
+  max-width: 22ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app__authloading {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
 .app__login {
   padding: 0.45rem 0.95rem;
   border-radius: 8px;
