@@ -21,15 +21,14 @@ export function HomePage() {
         <div className="home__point">
           <h2>Measured from hang time</h2>
           <p>
-            Your height comes from how long you&apos;re in the air, using <code>h = g·t²/8</code>.
+            Your height comes from how long you're in the air, using <code>h = g·t²/8</code>.
             No reference object or calibration needed in the shot.
           </p>
         </div>
         <div className="home__point">
           <h2>Your video stays yours</h2>
           <p>
-            Everything runs on your device. Your clip is never uploaded to a server — there
-            isn&apos;t one.
+            Everything runs on your device. Your clip is never uploaded to a server.
           </p>
         </div>
         <div className="home__point">

@@ -83,7 +83,7 @@ export function HistoryPage() {
   };
 
   if (!configured) {
-    return <p className="hist__empty">Accounts aren&apos;t enabled in this build.</p>;
+    return <p className="hist__empty">Accounts aren't enabled in this build.</p>;
   }
   if (authLoading) return <p className="hist__empty">…</p>;
   if (!user) {
@@ -107,7 +107,7 @@ export function HistoryPage() {
       <h1 className="hist__title">Your jumps</h1>
 
       {load === 'loading' && <p className="hist__empty">Loading…</p>}
-      {load === 'error' && <p className="hist__err">Couldn&apos;t load history: {error}</p>}
+      {load === 'error' && <p className="hist__err">Couldn't load history: {error}</p>}
 
       {load === 'ready' && jumps.length === 0 && (
         <div className="hist__empty">

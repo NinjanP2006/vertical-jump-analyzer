@@ -22,7 +22,7 @@ function AuthControl() {
         </button>
         {showNote && (
           <p className="app__authnote" role="status">
-            Accounts aren&apos;t enabled in this build. You can measure your jump right now without
+            Accounts aren't enabled in this build. You can measure your jump right now without
             one.
           </p>
         )}

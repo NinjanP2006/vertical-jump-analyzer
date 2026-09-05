@@ -178,7 +178,7 @@ export function JumpAnalyzer() {
             </div>
           ) : (
             <div className="ja__nojump">
-              <strong>Couldn&apos;t measure this jump.</strong>
+              <strong>Couldn't measure this jump.</strong>
               <p>{result.message ?? 'No clear jump detected.'}</p>
             </div>
           )}
