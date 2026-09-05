@@ -6,6 +6,7 @@ import { HistoryPage } from './components/HistoryPage';
 import { VideoScrubber } from './components/VideoScrubber';
 import { ValidationPanel } from './components/ValidationPanel';
 import { useAuth } from './auth/useAuth';
+import { devMode } from './devMode';
 import './App.css';
 
 function AuthControl() {
@@ -73,12 +74,17 @@ function AppHeader() {
               History
             </NavLink>
           )}
-          <NavLink to="/dev" className={({ isActive }) => (isActive ? 'active' : '')}>
-            Dev scrubber
-          </NavLink>
-          <NavLink to="/validation" className={({ isActive }) => (isActive ? 'active' : '')}>
-            Validation
-          </NavLink>
+          {/* Developer-only tools — hidden from users; revealed with ?dev=1 (see devMode.ts). */}
+          {devMode && (
+            <>
+              <NavLink to="/dev" className={({ isActive }) => (isActive ? 'active' : '')}>
+                Dev scrubber
+              </NavLink>
+              <NavLink to="/validation" className={({ isActive }) => (isActive ? 'active' : '')}>
+                Validation
+              </NavLink>
+            </>
+          )}
         </nav>
       )}
     </header>
