@@ -10,8 +10,8 @@ import { HttpUserPoolAuthorizer } from 'aws-cdk-lib/aws-apigatewayv2-authorizers
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 
 export interface BackendStackProps extends cdk.StackProps {
-  /** Frontend origin — used for hosted-UI callbacks and API CORS. */
-  appUrl: string;
+  /** Frontend origins (no trailing slash) — used for hosted-UI callbacks and API CORS. */
+  appUrls: string[];
   /** Globally-unique Cognito hosted-UI subdomain prefix. */
   domainPrefix: string;
 }
@@ -48,13 +48,15 @@ export class BackendStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
+    // Allow each origin both with and without a trailing slash (the app redirects to `${origin}/`).
+    const redirectUrls = props.appUrls.flatMap((u) => [u, `${u}/`]);
     const userPoolClient = userPool.addClient('WebClient', {
       authFlows: { userSrp: true },
       oAuth: {
         flows: { authorizationCodeGrant: true },
         scopes: [cognito.OAuthScope.OPENID, cognito.OAuthScope.EMAIL, cognito.OAuthScope.PROFILE],
-        callbackUrls: [props.appUrl, `${props.appUrl}/`],
-        logoutUrls: [props.appUrl, `${props.appUrl}/`],
+        callbackUrls: redirectUrls,
+        logoutUrls: redirectUrls,
       },
       preventUserExistenceErrors: true,
     });
@@ -88,7 +90,7 @@ export class BackendStack extends cdk.Stack {
 
     const httpApi = new apigw.HttpApi(this, 'HttpApi', {
       corsPreflight: {
-        allowOrigins: [props.appUrl],
+        allowOrigins: props.appUrls,
         allowMethods: [
           apigw.CorsHttpMethod.GET,
           apigw.CorsHttpMethod.POST,
